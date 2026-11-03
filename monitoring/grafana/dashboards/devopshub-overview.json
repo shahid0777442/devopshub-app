@@ -1,0 +1,53 @@
+{
+  "title": "DevOpsHub App Overview",
+  "uid": "devopshub-overview",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "10s",
+  "time": { "from": "now-30m", "to": "now" },
+  "panels": [
+    {
+      "id": 1, "type": "stat", "title": "App Status (1 = UP)",
+      "gridPos": { "h": 5, "w": 6, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [ { "refId": "A", "expr": "up{job=\"devopshub-app\"}" } ]
+    },
+    {
+      "id": 2, "type": "stat", "title": "Total Tasks",
+      "gridPos": { "h": 5, "w": 6, "x": 6, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [ { "refId": "A", "expr": "devopshub_tasks_total" } ]
+    },
+    {
+      "id": 3, "type": "stat", "title": "Uptime (seconds)",
+      "gridPos": { "h": 5, "w": 6, "x": 12, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [ { "refId": "A", "expr": "devopshub_uptime_seconds" } ]
+    },
+    {
+      "id": 4, "type": "stat", "title": "Running Version / Env",
+      "gridPos": { "h": 5, "w": 6, "x": 18, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "options": { "textMode": "name", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "" } },
+      "targets": [ { "refId": "A", "expr": "devopshub_app_info", "legendFormat": "v{{version}} ({{env}})" } ]
+    },
+    {
+      "id": 5, "type": "timeseries", "title": "Requests per second (by route)",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 5 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [ { "refId": "A", "expr": "sum(rate(devopshub_http_requests_total[1m])) by (route)", "legendFormat": "{{route}}" } ]
+    },
+    {
+      "id": 6, "type": "timeseries", "title": "Errors per second (5xx)",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 5 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [ { "refId": "A", "expr": "sum(rate(devopshub_http_requests_total{status=~\"5..\"}[1m]))", "legendFormat": "5xx" } ]
+    },
+    {
+      "id": 7, "type": "timeseries", "title": "p95 latency (seconds)",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 13 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [ { "refId": "A", "expr": "histogram_quantile(0.95, sum(rate(devopshub_http_request_duration_seconds_bucket[5m])) by (le))", "legendFormat": "p95" } ]
+    }
+  ]
+}

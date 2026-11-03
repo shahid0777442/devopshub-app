@@ -1,0 +1,7 @@
+apiVersion: 1
+providers:
+  - name: DevOpsHub
+    folder: DevOpsHub
+    type: file
+    options:
+      path: /var/lib/grafana/dashboards
